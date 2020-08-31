@@ -226,7 +226,7 @@ function Invoke-VulnAD {
     )
     ShowBanner
     $Global:Domain = $DomainName
-    Set-ADDefaultDomainPasswordPolicy -Identity $Global:Domain -LockoutDuration 00:01:00 -LockoutObservationWindow 00:01:00 -ComplexityEnabled $false -ReversibleEncryptionEnabled $False
+    Set-ADDefaultDomainPasswordPolicy -Identity $Global:Domain -LockoutDuration 00:01:00 -LockoutObservationWindow 00:01:00 -ComplexityEnabled $false -ReversibleEncryptionEnabled $False -MinPasswordLength 4
     VulnAD-AddADUser -limit $UsersLimit
     Write-Good "Users Created"
     VulnAD-AddADGroup -GroupList $Global:HighGroups
