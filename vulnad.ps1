@@ -138,14 +138,14 @@ function VulnAD-Kerberoasting {
     $spn = $selected_service.split(',')[1];
     $password = VulnAD-GetRandom -InputList $Global:BadPasswords;
     Write-Info "Kerberoasting $svc $spn"
-    Try { New-ADServiceAccount -Name $svc -ServicePrincipalNames "($svc)/($spn).($Global:Domain)" -AccountPassword (ConvertTo-SecureString $password -AsPlainText -Force) -RestrictToSingleComputer -PassThru } Catch {}
+    Try { New-ADServiceAccount -Name $svc -ServicePrincipalNames "$svc/$spn.$Global:Domain" -AccountPassword (ConvertTo-SecureString $password -AsPlainText -Force) -RestrictToSingleComputer -PassThru } Catch {}
     foreach ($sv in $Global:ServicesAccountsAndSPNs) {
         if ($selected_service -ne $sv) {
             $svc = $sv.split(',')[0];
             $spn = $sv.split(',')[1];
             Write-Info "Creating $svc services account"
             $password = ([System.Web.Security.Membership]::GeneratePassword(12,2))
-            Try { New-ADServiceAccount -Name $svc -ServicePrincipalNames "($svc)/($spn).($Global:Domain)" -RestrictToSingleComputer -AccountPassword (ConvertTo-SecureString $password -AsPlainText -Force) -PassThru } Catch {}
+            Try { New-ADServiceAccount -Name $svc -ServicePrincipalNames "$svc/$spn.$Global:Domain" -RestrictToSingleComputer -AccountPassword (ConvertTo-SecureString $password -AsPlainText -Force) -PassThru } Catch {}
 
         }
     }
