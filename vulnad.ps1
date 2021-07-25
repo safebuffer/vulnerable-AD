@@ -190,23 +190,22 @@ function VulnAD-PasswordSpraying {
 }
 function VulnAD-DCSync {
     for ($i=1; $i -le (Get-Random -Maximum 6); $i=$i+1 ) {
+        $ADObject = [ADSI]("LDAP://" + (Get-ADDomain $Global:Domain).DistinguishedName)
         $randomuser = (VulnAD-GetRandom -InputList $Global:CreatedUsers)
-
-        $userobject = (Get-ADUser -Identity $randomuser).distinguishedname
-        $ACL = Get-Acl -Path "AD:\$userobject"
         $sid = (Get-ADUser -Identity $randomuser).sid
 
         $objectGuidGetChanges = New-Object Guid 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
         $ACEGetChanges = New-Object DirectoryServices.ActiveDirectoryAccessRule($sid,'ExtendedRight','Allow',$objectGuidGetChanges)
-        $ACL.psbase.AddAccessRule($ACEGetChanges)
+        $ADObject.psbase.Get_objectsecurity().AddAccessRule($ACEGetChanges)
 
         $objectGuidGetChanges = New-Object Guid 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
         $ACEGetChanges = New-Object DirectoryServices.ActiveDirectoryAccessRule($sid,'ExtendedRight','Allow',$objectGuidGetChanges)
-        $ACL.psbase.AddAccessRule($ACEGetChanges)
+        $ADObject.psbase.Get_objectsecurity().AddAccessRule($ACEGetChanges)
 
         $objectGuidGetChanges = New-Object Guid 89e95b76-444d-4c62-991a-0facbeda640c
         $ACEGetChanges = New-Object DirectoryServices.ActiveDirectoryAccessRule($sid,'ExtendedRight','Allow',$objectGuidGetChanges)
-        $ACL.psbase.AddAccessRule($ACEGetChanges)
+        $ADObject.psbase.Get_objectsecurity().AddAccessRule($ACEGetChanges)
+        $ADObject.psbase.CommitChanges()
 
         Set-ADUser $randomuser -Description "Replication Account"
         Write-Info "Giving DCSync to : $randomuser"
