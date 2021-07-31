@@ -16,7 +16,8 @@ Create a vulnerable active directory that's allowing you to test most of active 
 - Kerberoasting
 - AS-REP Roasting
 - Abuse DnsAdmins
-- Password in AD User comment
+- Password in Object Description
+- User Objects With Default password (Changeme123!)
 - Password Spraying
 - DCSync
 - Silver Ticket
@@ -35,5 +36,5 @@ Invoke-VulnAD -UsersLimit 100 -DomainName "cs.org"
 ```
 
 ### TODO
-- Add More realistic scenarios
+- Play with workstations !
 - Click close issue button on github
